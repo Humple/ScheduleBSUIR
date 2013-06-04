@@ -106,7 +106,6 @@ namespace ScheduleBSUIR
             }
 
             if (!FirstShow) GenerateSchedule();
-            FirstShow = false;
         }
 
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
@@ -122,17 +121,20 @@ namespace ScheduleBSUIR
             NavigationService.Navigate(new Uri("/Microsoft.Phone.Controls.Toolkit;component/DateTimePickers/DatePickerPage.xaml" + "?date=" + currentDate.ToShortDateString(), UriKind.Relative));
         }
 
-
-        private void pivot_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
-        { // асинзронная подгрузка расписания при перелистывании
-            int tmp = pivot.SelectedIndex - prevIndex;
-            if (tmp > 1) tmp = -1;
-            if (tmp < -1) tmp = 1;
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
+        private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!FirstShow)
             {
-                GenerateDayNames(currentDate.AddDays(tmp));
-                GenerateSchedule();
-            });;
+                int tmp = pivot.SelectedIndex - prevIndex;
+                if (tmp > 1) tmp = -1;
+                if (tmp < -1) tmp = 1;
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    GenerateDayNames(currentDate.AddDays(tmp));
+                    GenerateSchedule();
+                }); ;
+            }
+            else FirstShow = false;
         }
 
         private void pivot_ManipulationStarted(object sender, System.Windows.Input.ManipulationStartedEventArgs e)
@@ -257,5 +259,7 @@ namespace ScheduleBSUIR
         {
             GenerateSchedule();
         }
+
+
     }
 }
