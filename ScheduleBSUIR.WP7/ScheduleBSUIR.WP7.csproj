@@ -114,6 +114,7 @@
   <ItemGroup>
     <Content Include="AppResLib.dll.0419.mui" />
     <Content Include="AppResLib.dll.0423.mui" />
+    <None Include="ClassDiagram.cd" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>

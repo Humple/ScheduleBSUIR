@@ -211,8 +211,6 @@ namespace ScheduleBSUIR
             }
         }
 
-        delegate void MethodDelegate();
-
         void GenerateSchedule()
         { // Выборка из XML файла расписания на текущий день и загрузка его на экран
             if (document != null)

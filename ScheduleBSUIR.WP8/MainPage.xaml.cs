@@ -146,16 +146,18 @@ namespace ScheduleBSUIR
         { // Возврат нa сегодняшнюю дату
             if (currentDate != DateTime.Today)
             {
+                prevIndex = pivot.SelectedIndex;
                 if (currentDate > DateTime.Today)
                 {
-                    if (pivot.SelectedIndex != 0) pivot.SelectedIndex -= 1;
-                    else pivot.SelectedIndex = PagesCount - 1;
+                    if (pivot.SelectedIndex != 0) prevIndex -= 1;
+                    else prevIndex = PagesCount - 1;
                 }
                 else
                 {
-                    if (pivot.SelectedIndex != PagesCount - 1) pivot.SelectedIndex += 1;
-                    else pivot.SelectedIndex = 0;
+                    if (pivot.SelectedIndex != PagesCount - 1) prevIndex += 1;
+                    else prevIndex = 0;
                 }
+                pivot.SelectedIndex = prevIndex;
                 GenerateDayNames(DateTime.Today);
                 GenerateSchedule();
             }
