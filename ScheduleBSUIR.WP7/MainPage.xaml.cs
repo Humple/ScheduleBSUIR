@@ -178,12 +178,14 @@ namespace ScheduleBSUIR
             DateTime startdate;
             int daydelta, weeknum = 0;
 
-            if (date.Month < 8) startdate = new DateTime(date.Year - 1, 9, 1);
+            if (date.Month <= 8) startdate = new DateTime(date.Year - 1, 9, 1);
             else startdate = new DateTime(date.Year, 9, 1);
+
+            if (startdate.DayOfWeek == 0) weeknum++;
 
             startdate = startdate.AddDays(-1 * (int)startdate.DayOfWeek);
 
-            if (date.Month < 8) daydelta = Math.Abs(date.DayOfYear + (new DateTime(startdate.Year, 12, 31).DayOfYear - startdate.DayOfYear));
+            if (date.Month <= 8) daydelta = Math.Abs(date.DayOfYear + (new DateTime(startdate.Year, 12, 31).DayOfYear - startdate.DayOfYear));
             else daydelta = Math.Abs(date.DayOfYear - startdate.DayOfYear);
 
             while (daydelta > 7)
@@ -195,6 +197,7 @@ namespace ScheduleBSUIR
             while (weeknum > 4) weeknum -= 4;
             return weeknum;
         }
+
         string GetClassNumber(string time)
         {
             switch (time)
