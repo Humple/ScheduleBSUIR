@@ -5,7 +5,7 @@
     <Language code="be" />
     <Language code="ru" />
   </Languages>
-  <App xmlns="" ProductID="{26a8f046-12d8-4546-b2e2-55409ea539b9}" Title="@AppResLib.dll,-100" RuntimeType="Silverlight" Version="1.0.0.2" Genre="apps.normal" Author="Alex Lapuka" Description="" Publisher="Alex Lapuka" PublisherID="{87fb73aa-f908-4467-b062-a2d395f6973a}">
+  <App xmlns="" ProductID="{26a8f046-12d8-4546-b2e2-55409ea539b9}" Title="@AppResLib.dll,-100" RuntimeType="Silverlight" Version="1.0.2.0" Genre="apps.normal" Author="Alex Lapuka" Description="" Publisher="Alex Lapuka" PublisherID="{87fb73aa-f908-4467-b062-a2d395f6973a}">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
@@ -17,17 +17,18 @@
     <Tokens>
       <PrimaryToken TokenID="ScheduleBSUIRToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsResource="false" IsRelative="true">Background.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">ApplicationIcon.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsResource="false" IsRelative="true">Background.png</BackgroundImageURI>
-          <Title>@AppResLib.dll,-101</Title>
+          <BackgroundImageURI IsRelative="true" IsResource="false">ApplicationIcon.png</BackgroundImageURI>
+          <Title>
+          </Title>
           <BackContent>
           </BackContent>
-          <BackBackgroundImageURI>
+          <BackBackgroundImageURI IsRelative="true" IsResource="false">
           </BackBackgroundImageURI>
           <BackTitle>
           </BackTitle>
-          <DeviceLockImageURI>
+          <DeviceLockImageURI IsRelative="true" IsResource="false">
           </DeviceLockImageURI>
           <HasLarge>false</HasLarge>
         </TemplateFlip>
@@ -35,6 +36,8 @@
     </Tokens>
     <ScreenResolutions>
       <ScreenResolution Name="ID_RESOLUTION_WVGA" />
+      <ScreenResolution Name="ID_RESOLUTION_HD720P" />
+      <ScreenResolution Name="ID_RESOLUTION_WXGA" />
     </ScreenResolutions>
   </App>
 </Deployment>

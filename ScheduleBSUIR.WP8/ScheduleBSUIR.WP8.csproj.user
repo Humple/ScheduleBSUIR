@@ -5,10 +5,8 @@
     <CurrentDeployID>7988B8C3-3ADE-488d-BA3E-D052AC9DC710</CurrentDeployID>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <CurrentDeployCmdId>
-    </CurrentDeployCmdId>
-    <CurrentDeployID>
-    </CurrentDeployID>
+    <CurrentDeployCmdId>256</CurrentDeployCmdId>
+    <CurrentDeployID>30F105C9-681E-420b-A277-7C086EAD8A4E</CurrentDeployID>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

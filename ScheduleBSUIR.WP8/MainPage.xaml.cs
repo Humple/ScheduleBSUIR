@@ -173,6 +173,7 @@ namespace ScheduleBSUIR
                 case 4: return "чт";
                 case 5: return "пт";
                 case 6: return "сб";
+                case 7: return "вс";
                 default: return "";
             }
         }
@@ -204,18 +205,15 @@ namespace ScheduleBSUIR
 
         string GetClassNumber(string time)
         {
-            switch (time)
-            {
-                case "8:00-9:35": return "1";
-                case "9:45-11:20": return "2";
-                case "11:40-13:15": return "3";
-                case "13:25-15:00": return "4";
-                case "15:20-16:55": return "5";
-                case "17:05-18:40": return "6";
-                case "18:45-20:20": return "7";
-                case "20:25-22:00": return "8";
-                default: return "";
-            }
+            return time.StartsWith("8:") ? "1" :
+                time.StartsWith("9:") ? "2" :
+                time.StartsWith("11:") ? "3" :
+                time.StartsWith("13:") ? "4" :
+                time.StartsWith("15:") ? "5" :
+                time.StartsWith("17:") ? "6" :
+                time.StartsWith("18:") ? "7" :
+                time.StartsWith("20:") ? "8" :
+                "";
         }
 
         delegate void MethodDelegate();
