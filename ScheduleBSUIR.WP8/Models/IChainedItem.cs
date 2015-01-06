@@ -9,7 +9,6 @@ namespace ScheduleBSUIR.Models
     public interface IChainedItem
     {
         IChainedItem Next();
-
         IChainedItem Previous();
     }
 }

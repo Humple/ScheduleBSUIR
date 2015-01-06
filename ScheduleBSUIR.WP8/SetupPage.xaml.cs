@@ -1,45 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.IO.IsolatedStorage;
-using System.IO;
 using System.Windows.Media.Imaging;
-using ScheduleBSUIR.Resources;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Tasks;
+using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Resources;
+using ScheduleParser;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace ScheduleBSUIR
 {
     public partial class OptionsPage : PhoneApplicationPage
     {
-        private readonly string ScheduleUri = "http://www.bsuir.by/psched/rest/";
-        private readonly string Extension = ".bsuir";
+        private const string ScheduleUri = @"http://www.bsuir.by/schedule/rest/schedule/";
+        private const string Extension = ".bsuir";
+
         public OptionsPage()
         {
             InitializeComponent();
-            
         }
 
         private void ScheduleList_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshScheduleList();
         }
-        void RefreshScheduleList()
+
+        private void RefreshScheduleList()
         {
             ScheduleList.IsEnabled = false;
             IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-            List<GroupScheduleLink> fileslist = new List<GroupScheduleLink>();
-            foreach (string item in storage.GetFileNames("*" + Extension))
-            {
-                fileslist.Add(new GroupScheduleLink(item));
-            }
+            List<GroupScheduleLink> fileslist = storage
+                .GetFileNames("*" + Extension)
+                .Select(item => new GroupScheduleLink(item))
+                .ToList();
+
             ScheduleList.ItemsSource = fileslist;
             ScheduleList.IsEnabled = true;
         }
@@ -49,30 +49,50 @@ namespace ScheduleBSUIR
             GroupBox.IsEnabled = false;
             DownloadButton.IsEnabled = false;
             ScheduleList.IsEnabled = false;
+
             WebClient wc = new WebClient();
-            wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+            wc.DownloadStringCompleted += wc_DownloadStringCompleted;
+
             IsolatedStorageSettings.ApplicationSettings.Remove("DownloadGroupName");
             IsolatedStorageSettings.ApplicationSettings.Add("DownloadGroupName", GroupBox.Text);
+
             wc.DownloadStringAsync(new Uri(ScheduleUri + GroupBox.Text));
-            //wc.DownloadStringAsync(new Uri("https://dl.dropboxusercontent.com/u/46762801/Sites/velcom_tibo/050503.xml"));
         }
 
-        void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             GroupBox.IsEnabled = true;
             DownloadButton.IsEnabled = true;
-            if (e.Error != null) { MessageBox.Show(AppResources.error_DownloadFile);}
+            if (e.Error != null)
+            {
+#if DEBUG 
+                DemoSchedule demo = new DemoSchedule();
+                IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+
+                using (StreamWriter sw = new StreamWriter(
+                    storage.CreateFile(IsolatedStorageSettings.ApplicationSettings["DownloadGroupName"] + Extension)
+                    ))
+                {
+                    sw.Write(demo.GetScheduleString());
+                }                
+#else
+                MessageBox.Show(AppResources.error_DownloadFile
+                                + Environment.NewLine + e.Error.Message);
+#endif
+            }
             else
             {
                 IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-                IsolatedStorageFileStream filestream = storage.CreateFile(IsolatedStorageSettings.ApplicationSettings["DownloadGroupName"] + Extension);
 
-                StreamWriter sw = new StreamWriter(filestream);
-                sw.Write(e.Result);
-                sw.Close();
+                using (StreamWriter sw = new StreamWriter(
+                    storage.CreateFile(IsolatedStorageSettings.ApplicationSettings["DownloadGroupName"] + Extension)
+                    ))
+                {
+                    sw.Write(e.Result);
+                }
 
-                filestream.Close();
             }
+
             IsolatedStorageSettings.ApplicationSettings.Remove("DownloadGroupName");
             RefreshScheduleList();
         }
@@ -84,76 +104,73 @@ namespace ScheduleBSUIR
             DownloadButton.IsEnabled = true;
         }
 
-        private void DeleteGroupScheduleLinkButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void DeleteGroupScheduleLinkButton_Tap(object sender, GestureEventArgs e)
         {
             IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
             IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            GroupScheduleLink linkItem = ((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex];
             try
             {
-                if (((string)settings["filename"]) == ((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex].Filename)
+                if (((string) settings["filename"]) == linkItem.Filename)
                 {
                     settings.Remove("filename");
                     settings.Save();
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
 
-            storage.DeleteFile(((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex].Filename);
+            storage.DeleteFile(linkItem.Filename);
             RefreshScheduleList();
         }
 
-        private void GroupName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void GroupName_Tap(object sender, GestureEventArgs e)
         {
             IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
             settings.Remove("groupname");
             settings.Remove("filename");
             settings.Remove("subgroup");
-            settings.Add("groupname", ((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex].Name);
-            settings.Add("filename", ((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex].Filename);
-            settings.Add("subgroup", 0);
+            GroupScheduleLink linkItem = ((List<GroupScheduleLink>) ScheduleList.ItemsSource)[ScheduleList.SelectedIndex];
+            settings.Add("groupname", linkItem.Name);
+            settings.Add("filename", linkItem.Filename);
+            settings.Add("subgroup", SubgroupScope.All);
             settings.Save();
+            
             NavigationService.GoBack();
         }
 
-        private void RefteshGroupScheduleLinkButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void RefteshGroupScheduleLinkButton_Tap(object sender, GestureEventArgs e)
         {
             GroupBox.IsEnabled = false;
             DownloadButton.IsEnabled = false;
             ScheduleList.IsEnabled = false;
             WebClient wc = new WebClient();
-            wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+            wc.DownloadStringCompleted += wc_DownloadStringCompleted;
             IsolatedStorageSettings.ApplicationSettings.Remove("DownloadGroupName");
-            IsolatedStorageSettings.ApplicationSettings.Add("DownloadGroupName", ((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex].Name);
-            wc.DownloadStringAsync(new Uri(ScheduleUri + ((List<GroupScheduleLink>)ScheduleList.ItemsSource)[ScheduleList.SelectedIndex].Name));
+
+            GroupScheduleLink linkItem = ((List<GroupScheduleLink>) ScheduleList.ItemsSource)[ScheduleList.SelectedIndex];
+            IsolatedStorageSettings.ApplicationSettings.Add("DownloadGroupName", linkItem.Name);
+            wc.DownloadStringAsync(new Uri(ScheduleUri + linkItem.Name));
         }
 
         private void RefteshGroupScheduleLinkButton_Loaded(object sender, RoutedEventArgs e)
         {
-            BitmapImage bi = new BitmapImage();
-            var darkVisibility = (Visibility)Application.Current.Resources["PhoneDarkThemeVisibility"];
-            if (darkVisibility == Visibility.Visible) 
-            {
-                bi.UriSource = new Uri("Icons/refresh.png", UriKind.Relative);
-            }
-            else 
-            {
-                bi.UriSource = new Uri("Icons/refresh_dark.png", UriKind.Relative);
-            }
-            ((Image)sender).Source = bi;
+            UpdateIcon(sender, "refresh");
         }
 
         private void DeleteGroupScheduleLinkButton_Loaded(object sender, RoutedEventArgs e)
         {
+            UpdateIcon(sender, "delete");
+        }
+
+        private void UpdateIcon(object sender, string name)
+        {
             BitmapImage bi = new BitmapImage();
-            var darkVisibility = (Visibility)Application.Current.Resources["PhoneDarkThemeVisibility"];
-            if (darkVisibility == Visibility.Visible)
-            {
-                bi.UriSource = new Uri("Icons/delete.png", UriKind.Relative);
-            }
-            else
-            {
-                bi.UriSource = new Uri("Icons/delete_dark.png", UriKind.Relative);
-            }
+            Visibility darkVisibility = (Visibility)Application.Current.Resources["PhoneDarkThemeVisibility"];
+            bi.UriSource = darkVisibility == Visibility.Visible
+                ? new Uri(string.Format("Icons/{0}.png", name), UriKind.Relative)
+                : new Uri(string.Format("Icons/{0}_dark.png", name), UriKind.Relative);
             ((Image)sender).Source = bi;
         }
 
@@ -162,41 +179,41 @@ namespace ScheduleBSUIR
             IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
             try
             {
-                string groupname = (string)settings["groupname"];
-                string filename = (string)settings["filename"];
-                switch ((int)settings["subgroup"])
-                {
-                    case 0: BothGroupRadio.IsChecked = true; break;
-                    case 1: FirstGroupRadio.IsChecked = true; break;
-                    case 2: SecondGroupRadio.IsChecked = true; break;
-                }
-                SubgroupSwitch.Visibility = System.Windows.Visibility.Visible;
+                var subgroup = (string)settings["subgroup"];
+                BothGroupRadio.IsChecked = subgroup.Equals(SubgroupScope.All);
+                FirstGroupRadio.IsChecked = subgroup.Equals(SubgroupScope.First);
+                SecondGroupRadio.IsChecked = subgroup.Equals(SubgroupScope.Second);                
+                SubgroupSwitch.Visibility = Visibility.Visible;
             }
-            catch { SubgroupSwitch.Visibility = System.Windows.Visibility.Collapsed; }
+            catch
+            {
+                SubgroupSwitch.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void BothGroupRadio_Checked(object sender, RoutedEventArgs e)
         {
-            IsolatedStorageSettings.ApplicationSettings.Remove("subgroup");
-            IsolatedStorageSettings.ApplicationSettings.Add("subgroup", 0);
-            IsolatedStorageSettings.ApplicationSettings.Save();
+            SetSubgroup(SubgroupScope.All);
         }
 
         private void FirstGroupRadio_Checked(object sender, RoutedEventArgs e)
         {
-            IsolatedStorageSettings.ApplicationSettings.Remove("subgroup");
-            IsolatedStorageSettings.ApplicationSettings.Add("subgroup", 1);
-            IsolatedStorageSettings.ApplicationSettings.Save();
+            SetSubgroup(SubgroupScope.First);
         }
 
         private void SecondGroupRadio_Checked(object sender, RoutedEventArgs e)
         {
+            SetSubgroup(SubgroupScope.Second);
+        }
+
+        private void SetSubgroup(string value)
+        {
             IsolatedStorageSettings.ApplicationSettings.Remove("subgroup");
-            IsolatedStorageSettings.ApplicationSettings.Add("subgroup", 2);
+            IsolatedStorageSettings.ApplicationSettings.Add("subgroup", value);
             IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
-        private void GitHubLink_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void GitHubLink_Tap(object sender, GestureEventArgs e)
         {
             WebBrowserTask wbt = new WebBrowserTask();
             wbt.Uri = new Uri("https://github.com/Humple/ScheduleBSUIR");

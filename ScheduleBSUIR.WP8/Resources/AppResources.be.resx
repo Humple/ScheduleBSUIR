@@ -168,4 +168,7 @@
   <data name="Source" xml:space="preserve">
     <value>Код: </value>
   </data>
+  <data name="NoLessons" xml:space="preserve">
+    <value>Няма заняткаў</value>
+  </data>
 </root>

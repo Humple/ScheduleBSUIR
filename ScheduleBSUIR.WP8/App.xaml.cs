@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using ScheduleBSUIR.ViewModels;
 
 namespace ScheduleBSUIR
 {
     public partial class App : Application
     {
-        private static MainViewModel viewModel = null;
+        private static MainViewModel viewModel;
 
         /// <summary>
         /// Статический элемент ViewModel, используемый в представлениях для привязки.
@@ -28,10 +20,7 @@ namespace ScheduleBSUIR
             get
             {
                 // Отложить создание модели представления до необходимости
-                if (viewModel == null)
-                    viewModel = new MainViewModel();
-
-                return viewModel;
+                return viewModel ?? (viewModel = new MainViewModel());
             }
         }
 
@@ -56,10 +45,10 @@ namespace ScheduleBSUIR
             InitializePhoneApplication();
 
             // Отображение сведений о профиле графики во время отладки.
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
                 // Отображение текущих счетчиков частоты смены кадров
-                Application.Current.Host.Settings.EnableFrameRateCounter = true;
+                Current.Host.Settings.EnableFrameRateCounter = true;
 
                 // Отображение областей приложения, перерисовываемых в каждом кадре.
                 //Application.Current.Host.Settings.EnableRedrawRegions = true;
@@ -72,7 +61,12 @@ namespace ScheduleBSUIR
                 // объекта PhoneApplicationService приложения значение Disabled.
                 // Внимание! Используйте только в режиме отладки. Приложение, в котором отключено обнаружение бездействия пользователя, будет продолжать работать
                 // и потреблять энергию батареи, когда телефон не будет использоваться.
-                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+                PhoneApplicationService.Current.UserIdleDetectionMode =
+#if DEBUG
+                    IdleDetectionMode.Disabled;
+#else
+                    IdleDetectionMode.Enabled;
+#endif
             }
         }
 
@@ -87,10 +81,6 @@ namespace ScheduleBSUIR
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
             // Убедитесь, что состояние приложения восстановлено правильно
-            if (!App.ViewModel.IsDataLoaded)
-            {
-                App.ViewModel.LoadData();
-            }
         }
 
         // Код для выполнения при деактивации приложения (отправляется в фоновый режим)
@@ -109,20 +99,20 @@ namespace ScheduleBSUIR
         // Код для выполнения в случае ошибки навигации
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
                 // Ошибка навигации; перейти в отладчик
-                System.Diagnostics.Debugger.Break();
+                Debugger.Break();
             }
         }
 
         // Код для выполнения на необработанных исключениях
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
                 // Произошло необработанное исключение; перейти в отладчик
-                System.Diagnostics.Debugger.Break();
+                Debugger.Break();
             }
         }
 

@@ -16,7 +16,6 @@ namespace ScheduleBSUIR.Models
         DayViewModel Get(DateTime date);
 
         IEnumerable<DayViewModel> GetSequence(DateTime date, int number);
-
         void UpdateContent(DayViewModel dayViewModel);
     }
 }

@@ -4,19 +4,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:localresources="clr-namespace:ScheduleBSUIR.Resources"
-    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:viewModels="clr-namespace:ScheduleBSUIR.ViewModels"
+    xmlns:converters="clr-namespace:ScheduleBSUIR.Converters">
     
 
     <!--Ресурсы приложения-->
     <Application.Resources>
-        <localresources:LocalizedStrings x:Key="R"></localresources:LocalizedStrings>
+        <localresources:LocalizedStrings x:Key="R" />
+        <viewModels:MainViewModel x:Key="MainViewModel"/>
+        <viewModels:DayViewModel x:Key="DayViewModel"/>
+        <viewModels:SubjectViewModel x:Key="SubjectViewModel"/>
+        <converters:LessonTypeToColorConverter x:Key="LessonTypeToColorConverter"/>
+        <converters:WeeksContaintmentToVisibilityConverter x:Key="WeeksToVisibility" />
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>
         <!--Обязательный объект, обрабатывающий события времени жизни приложения-->
         <shell:PhoneApplicationService 
-            Launching="Application_Launching" Closing="Application_Closing" 
-            Activated="Application_Activated" Deactivated="Application_Deactivated"/>
+            Launching="Application_Launching" 
+            Closing="Application_Closing" 
+            Activated="Application_Activated" 
+            Deactivated="Application_Deactivated"/>
     </Application.ApplicationLifetimeObjects>
 
 </Application>
