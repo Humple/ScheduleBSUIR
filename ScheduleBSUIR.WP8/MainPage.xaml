@@ -12,42 +12,101 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True" >
 
- 
     <UserControl.Resources>
         <ResourceDictionary>
-            
-            <DataTemplate x:Key="SubjectItemDataTemplate">
+
+            <Style TargetType="Border" x:Name="WeekBorderStyle">
+                <Setter Property="Height" Value="1" />
+                <Setter Property="Background" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="LimeGreen" Opacity="0.8" />
+                    </Setter.Value>                    
+                </Setter>
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <DataTemplate x:Key="SubjectItemDataTemplate" d:DataContext="{StaticResource SubjectViewModel}">
                 <Grid Height="88" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding Subject}" HorizontalAlignment="Left" Height="46" Margin="46,1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="331" FontSize="32"/>
-                    <TextBlock Text="{Binding Place}" HorizontalAlignment="Left" Height="46" Margin="382,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="88" FontSize="29.333"/>
-                    <TextBlock Text="{Binding Time}" HorizontalAlignment="Left" Height="35" Margin="46,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="106"/>
-                    <TextBlock Text="{Binding Lector}" HorizontalAlignment="Left" Height="35" Margin="157,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="220" Foreground="Gray"/>
-                    <TextBlock Text="{Binding Type}" HorizontalAlignment="Left" Height="35" Margin="382,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="88"/>
-                    <TextBlock Text="{Binding Number}" HorizontalAlignment="Left" Height="63" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="31" FontSize="42.667" Foreground="{Binding NumberColor}"/>
-                </Grid>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="{Binding Subject}" HorizontalAlignment="Left" Height="46" Margin="46,1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="331" FontSize="32"/>
+                    <TextBlock Grid.Row="0" Text="{Binding Place}" HorizontalAlignment="Left" Height="46" Margin="382,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="88" FontSize="29.333"/>
+                    <TextBlock Grid.Row="0" Text="{Binding Time}" HorizontalAlignment="Left" Height="35" Margin="46,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="106"/>
+                    <TextBlock Grid.Row="0" Text="{Binding Lector}" HorizontalAlignment="Left" Height="35" Margin="157,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="220" Foreground="Gray"/>
+                    <TextBlock Grid.Row="0" Text="{Binding Type}" HorizontalAlignment="Left" Height="35" Margin="382,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="88"/>
+                    <TextBlock Grid.Row="0" Text="{Binding Number}" HorizontalAlignment="Left" Height="63" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="31" FontSize="42.667" 
+                               Foreground="{Binding Type, Converter={StaticResource LessonTypeToColorConverter}}"/>
+                    
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Style="{StaticResource WeekBorderStyle}"
+                                Visibility="{Binding Weeks, Converter={StaticResource WeeksToVisibility}, ConverterParameter=1}" 
+                                Grid.Column="0" />
+                        <Border Style="{StaticResource WeekBorderStyle}"
+                                Visibility="{Binding Weeks, Converter={StaticResource WeeksToVisibility}, ConverterParameter=2}" 
+                                Grid.Column="1" />
+                        <Border Style="{StaticResource WeekBorderStyle}"
+                                 Visibility="{Binding Weeks, Converter={StaticResource WeeksToVisibility}, ConverterParameter=3}" 
+                                Grid.Column="2" />
+                        <Border Style="{StaticResource WeekBorderStyle}"
+                                Visibility="{Binding Weeks, Converter={StaticResource WeeksToVisibility}, ConverterParameter=4}" 
+                                Grid.Column="3" />
+                    </Grid>                    
+                </Grid>                                               
             </DataTemplate>
             
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <!--LayoutRoot представляет корневую сетку, где размещается все содержимое страницы-->
-    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0,0,0,70">
-        <controls:Pivot x:Name="pivot" 
-                        ManipulationStarted="pivot_ManipulationStarted" 
-                        SelectionChanged="pivot_SelectionChanged"
-                        Loaded="pivot_Loaded"
-                        />
+    <Grid x:Name="LayoutRoot" 
+          Background="Transparent" 
+          Margin="0,0,0,70">
+        <controls:Pivot SelectionChanged="pivot_SelectionChanged"
+                        SelectedItem="{Binding SelectedDay, Mode=TwoWay}"
+                        ItemsSource="{Binding ShowedDays}" >
+            <controls:Pivot.ItemTemplate>
+                <DataTemplate>
+                    <ListBox ItemTemplate="{StaticResource SubjectItemDataTemplate}"
+                             ItemsSource="{Binding Subjects}" />
+                </DataTemplate>
+            </controls:Pivot.ItemTemplate>
+
+            <controls:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding ItemTitle}" />
+                </DataTemplate>
+            </controls:Pivot.HeaderTemplate>
+
+        </controls:Pivot>
     </Grid>
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar Opacity="0.7">
-            <shell:ApplicationBarIconButton IconUri="/Icons/here.png" Text="Today" Click="HomeButton_Click"/>
-            <shell:ApplicationBarIconButton IconUri="/Icons/options.png" Text="Options" Click="OptionsButton_Click"/>
-            <shell:ApplicationBarIconButton IconUri="/Icons/calendar.png" Text="Choose Date" Click="DateCoiceButton_Click"/>
+            <shell:ApplicationBarIconButton 
+                IconUri="/Icons/here.png" 
+                Text="Today" 
+                Click="HomeButton_Click" />
+            <shell:ApplicationBarIconButton 
+                IconUri="/Icons/options.png" 
+                Text="Options" 
+                Click="OptionsButton_Click" />
+            <shell:ApplicationBarIconButton 
+                IconUri="/Icons/calendar.png" 
+                Text="Choose Date" 
+                Click="DateCoiceButton_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
-
 
 </phone:PhoneApplicationPage>

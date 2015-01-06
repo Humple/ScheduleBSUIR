@@ -168,4 +168,7 @@
   <data name="Source" xml:space="preserve">
     <value>Source: </value>
   </data>
+  <data name="NoLessons" xml:space="preserve">
+    <value>No lessons</value>
+  </data>
 </root>
