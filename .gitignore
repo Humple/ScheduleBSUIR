@@ -3,6 +3,11 @@
 *.lo
 *.o
 *.obj
+*.pdb
+*.cache
+\obj
+\Debug
+\Release
 
 # Precompiled Headers
 *.gch
@@ -54,7 +59,9 @@
 *.log
 *.sql
 *.sqlite
- 
+*.sdf
+*.opensdf
+
 # OS generated files #
 ######################
 .DS_Store
