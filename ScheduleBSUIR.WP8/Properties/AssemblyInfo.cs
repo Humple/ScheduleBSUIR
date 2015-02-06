@@ -33,6 +33,6 @@ using ScheduleBSUIR.Resources;
 //
 // Можно указать все значения или задать для номеров редакции и построения значения по умолчанию 
 // с помощью символа '*', как показано ниже:
-[assembly: AssemblyVersion("1.0.2.0")]
-[assembly: AssemblyFileVersion("1.0.2.0")]
+[assembly: AssemblyVersion("1.0.3.1")]
+[assembly: AssemblyFileVersion("1.0.3.1")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
