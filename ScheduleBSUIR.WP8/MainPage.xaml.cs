@@ -98,41 +98,38 @@
                 Pivot pivot = sender as Pivot;
                 int nextSelectedIndex = pivot.SelectedIndex;
 
-                MainViewModel vm = App.ViewModel;
-                int baseIndex = vm.ShowedDays.Count;
-                int middle = baseIndex/2;
+                MainViewModel vmCopy = App.ViewModel;
+
+                int baseIndex = vmCopy.ShowedDays.Count;
                 int deltaMax = baseIndex - 1;
 
                 processingSelectionChange = true;
                 try
                 {
-                    int delta = pivot.SelectedIndex - vm.PreviousSelectedIndex;
+                    int delta = pivot.SelectedIndex - vmCopy.PreviousSelectedIndex;
                     if ((delta > 0 && delta != deltaMax) || delta == -deltaMax)
                     {
-                        vm.ShowedDays[nextSelectedIndex] = (DayViewModel) vm.ShowedDays[vm.PreviousSelectedIndex].Next();
+                        // going to the right
+                        vmCopy.ShowedDays[
+                            GetNormalizedIndex(vmCopy.PreviousSelectedIndex - 2, baseIndex)]
+                            .UpdateFrom(
+                            (DayViewModel)vmCopy.ShowedDays[
+                            GetNormalizedIndex(vmCopy.PreviousSelectedIndex + 2, baseIndex)]
+                            .Next());
                     }
                     else if ((delta < 0 && delta != -deltaMax) || delta == deltaMax)
                     {
-                        vm.ShowedDays[nextSelectedIndex] =
-                            (DayViewModel) vm.ShowedDays[vm.PreviousSelectedIndex].Previous();
+                        // going to the left
+                        vmCopy.ShowedDays[GetNormalizedIndex(vmCopy.PreviousSelectedIndex + 2, baseIndex)]
+                            .UpdateFrom(
+                            (DayViewModel)vmCopy.ShowedDays[GetNormalizedIndex(vmCopy.PreviousSelectedIndex - 2, baseIndex)]
+                            .Previous());
                     }
 
                     if (delta != 0)
                     {
-                        for (int i = 1; i <= middle; i++)
-                        {
-                            vm.ShowedDays[GetNormalizedIndex(nextSelectedIndex - i, baseIndex)] =
-                                (DayViewModel)
-                                    vm.ShowedDays[GetNormalizedIndex(nextSelectedIndex - i + 1, baseIndex)].Previous();
-
-                            vm.ShowedDays[GetNormalizedIndex(nextSelectedIndex + i, baseIndex)] =
-                                (DayViewModel)
-                                    vm.ShowedDays[GetNormalizedIndex(nextSelectedIndex + i - 1, baseIndex)].Next();
-                        }
-
-                        vm.SelectedDay = vm.ShowedDays[nextSelectedIndex];
-                        vm.PreviousSelectedIndex = nextSelectedIndex;
-                        vm.ShowedDays[nextSelectedIndex].UpdateContent();
+                        vmCopy.PreviousSelectedIndex = nextSelectedIndex;
+                        vmCopy.ShowedDays[nextSelectedIndex].UpdateContent();
                     }
                 }
                 finally

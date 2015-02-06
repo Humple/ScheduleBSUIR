@@ -30,7 +30,7 @@ namespace ScheduleBSUIR.ViewModels
             get { return itemTitle; }
             set
             {
-                itemTitle = value;
+                itemTitle = TitleLengthHack( value );
                 NotifyPropertyChanged("ItemTitle");
             }
         }
@@ -48,6 +48,28 @@ namespace ScheduleBSUIR.ViewModels
         public void UpdateContent()
         {
             DaySchedule.UpdateContent(this);
+        }
+
+        public void UpdateFrom(DayViewModel d)
+        {
+            Subjects = d.Subjects;
+            ItemTitle = d.ItemTitle;
+            Date = d.Date;
+        }
+
+        /// <summary> Hack for a title width. </summary>
+        /// <param name="t"></param>
+        /// <returns>Constant width string.</returns>
+        private static string TitleLengthHack(string t)
+        {
+            const int titleWidth = 12;
+
+            if (t.Length < titleWidth)
+            {
+                return t + new string(' ', titleWidth - t.Length);
+            }
+
+            return t;
         }
     }
 }
