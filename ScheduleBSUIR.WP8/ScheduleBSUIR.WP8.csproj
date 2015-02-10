@@ -126,6 +126,7 @@
     <Content Include="ApplicationIcon.png" />
     <Content Include="AppResLib.dll" />
     <Content Include="Background.png" />
+    <Content Include="bsuir.png" />
     <Content Include="Icons\calendar.png" />
     <Content Include="Icons\delete.png" />
     <Content Include="Icons\delete_dark.png" />

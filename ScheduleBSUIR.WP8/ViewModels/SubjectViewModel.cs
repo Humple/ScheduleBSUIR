@@ -54,7 +54,11 @@ namespace ScheduleBSUIR.ViewModels
 
         public string Subject
         {
-            get { return subject; }
+            get 
+            {
+                string sbgrp = (Subgroup == "1" || Subgroup == "2") ? " (" + Subgroup + ")" : "";
+                return subject + sbgrp;
+            }
             set
             {
                 subject = value;

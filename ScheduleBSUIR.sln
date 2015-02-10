@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows Phone 8", "Windows Phone 8", "{689F1886-C2C1-4B2A-89EB-8D665412DA8E}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppResLib", "AppResLib\AppResLib.vcxproj", "{160DC383-4E04-4CF0-B272-DD8BC22DA3D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleBSUIR.WP8", "ScheduleBSUIR.WP8\ScheduleBSUIR.WP8.csproj", "{B001BA62-D1CB-412D-8115-A60F66EE24FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleParser", "ScheduleParser\ScheduleParser.csproj", "{E71DE30F-C744-4402-A5F2-28828D28FF27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +76,20 @@ Global
 		{B001BA62-D1CB-412D-8115-A60F66EE24FD}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
 		{B001BA62-D1CB-412D-8115-A60F66EE24FD}.Release|Win32.ActiveCfg = Release|Any CPU
 		{B001BA62-D1CB-412D-8115-A60F66EE24FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|Win32.ActiveCfg = Release|Any CPU
+		{E71DE30F-C744-4402-A5F2-28828D28FF27}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,5 +97,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{486642F0-AB94-4F28-B49C-106CA3134239} = {689F1886-C2C1-4B2A-89EB-8D665412DA8E}
 		{B001BA62-D1CB-412D-8115-A60F66EE24FD} = {689F1886-C2C1-4B2A-89EB-8D665412DA8E}
+		{E71DE30F-C744-4402-A5F2-28828D28FF27} = {689F1886-C2C1-4B2A-89EB-8D665412DA8E}
 	EndGlobalSection
 EndGlobal

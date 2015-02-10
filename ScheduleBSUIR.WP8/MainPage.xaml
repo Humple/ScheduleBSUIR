@@ -21,7 +21,7 @@
                 <Setter Property="Height" Value="1" />
                 <Setter Property="Background" >
                     <Setter.Value>
-                        <SolidColorBrush Color="LimeGreen" Opacity="0.8" />
+                        <SolidColorBrush Color="Black" Opacity="0.8" />
                     </Setter.Value>                    
                 </Setter>
                 <Setter Property="Margin" Value="0" />

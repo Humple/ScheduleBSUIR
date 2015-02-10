@@ -5,7 +5,7 @@
     <Language code="be" />
     <Language code="ru" />
   </Languages>
-  <App xmlns="" ProductID="{26a8f046-12d8-4546-b2e2-55409ea539b9}" Title="@AppResLib.dll,-100" RuntimeType="Silverlight" Version="1.0.2.0" Genre="apps.normal" Author="Alex Lapuka" Description="" Publisher="Alex Lapuka" PublisherID="{87fb73aa-f908-4467-b062-a2d395f6973a}">
+  <App xmlns="" ProductID="{26a8f046-12d8-4546-b2e2-55409ea539b9}" Title="@AppResLib.dll,-100" RuntimeType="Silverlight" Version="1.1.0.0" Genre="apps.normal" Author="Alex Lapuka, romannort" Description="" Publisher="Alex Lapuka" PublisherID="{87fb73aa-f908-4467-b062-a2d395f6973a}">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
@@ -17,9 +17,9 @@
     <Tokens>
       <PrimaryToken TokenID="ScheduleBSUIRToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">ApplicationIcon.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">bsuir.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">ApplicationIcon.png</BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">bsuir.png</BackgroundImageURI>
           <Title>
           </Title>
           <BackContent>
@@ -30,7 +30,7 @@
           </BackTitle>
           <DeviceLockImageURI IsRelative="true" IsResource="false">
           </DeviceLockImageURI>
-          <HasLarge>false</HasLarge>
+          <HasLarge>False</HasLarge>
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>

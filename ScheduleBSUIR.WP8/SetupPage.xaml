@@ -67,7 +67,7 @@
             	<StackPanel>
             		<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                         <TextBlock HorizontalAlignment="Center" FontSize="32" Text="{Binding Path=R.Author, Source={StaticResource R}}" VerticalAlignment="Bottom"/>
-            			<TextBlock HorizontalAlignment="Left" FontSize="24" Text="Alex Lapuka" VerticalAlignment="Bottom" Height="36"/>
+                        <TextBlock HorizontalAlignment="Left" FontSize="24" Text="Alex Lapuka, romannort" VerticalAlignment="Bottom" Height="36"/>
             		</StackPanel>
             		<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                         <TextBlock HorizontalAlignment="Center" FontSize="32" Text="{Binding Path=R.License, Source={StaticResource R}}" VerticalAlignment="Bottom"/>
