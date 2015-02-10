@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace ScheduleBSUIR.ViewModels
 {
@@ -8,7 +9,7 @@ namespace ScheduleBSUIR.ViewModels
     {
         private DayViewModel selectedDay;
         private ObservableCollection<DayViewModel> showedDays;
-        private int previousSelectedIndex;        
+        private int previousSelectedIndex;
 
         public DateTime CurrentDate
         {
@@ -21,21 +22,23 @@ namespace ScheduleBSUIR.ViewModels
         {
             IsDataLoaded = false;
 
-            ShowedDays = new ObservableCollection<DayViewModel>(days);
-            PreviousSelectedIndex = ShowedDays.Count / 2;
+            List<DayViewModel> daysList = days.ToList();
+
+            ShowedDays = new ObservableCollection<DayViewModel>(daysList.Skip(2).Concat(daysList.Take(2)));
+            PreviousSelectedIndex = 0;
             SelectedDay = ShowedDays[PreviousSelectedIndex];
             ShowedDays[PreviousSelectedIndex].UpdateContent();
 
-            IsDataLoaded = true;            
+            IsDataLoaded = true;
         }
-        
+
         public DayViewModel SelectedDay
         {
             get { return selectedDay; }
             set
             {
                 selectedDay = value;
-                NotifyPropertyChanged("SelectedDay");                
+                NotifyPropertyChanged("SelectedDay");
             }
         }
 
@@ -58,8 +61,8 @@ namespace ScheduleBSUIR.ViewModels
             set
             {
                 showedDays = value;
-                NotifyPropertyChanged("ShowedDays");                
+                NotifyPropertyChanged("ShowedDays");
             }
-        }       
+        }
     }
 }
